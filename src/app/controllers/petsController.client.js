@@ -156,10 +156,36 @@
             }, hideWait);
         }
         
+        function likeAgetLoginIfNeed(){
+            if(controller.pets && $rootScope.loggedIn)
+            {
+                 var likeAfterLogin = getItem('like_pet_after_login');
+                    if(likeAfterLogin){
+                        setItem('like_pet_after_login', '');
+                        controller.pets.forEach(function(p){
+                            if(p._id == likeAfterLogin){
+                                controller.likePet(p);
+                            }
+                        })
+                }
+            }
+            
+        }
         controller.likePet = function(pet) {
-            $http.get('/api/pet/' + pet._id + '/like').then(function(res) {
-                pet.likes = res.data;
-            });
+            
+            
+            if ($rootScope.loggedIn) {
+                 $http.get('/api/pet/' + pet._id + '/like').then(function(res) {
+                    pet.likes = res.data;
+                });
+            }
+            else {
+                setItem("like_pet_after_login", pet._id);
+                userController.loginClick();
+            }
+            
+            
+           
         }
 
 
@@ -167,6 +193,7 @@
 
         $rootScope.$watch('[loggedIn]', function(newValue, oldValue) {
             if (newValue[0]) {
+                likeAgetLoginIfNeed();
                 if (getItem('add_new_pet_after_login') === "1") {
                     addNewPet();
                 }
@@ -200,6 +227,9 @@
                 }
 
                 controller.pets = res.data;
+                
+               likeAgetLoginIfNeed();
+                
                 $timeout(recalcContainerPos, 40);
             }, hideWait);
         }
@@ -207,7 +237,6 @@
         renewAllPets();
 
         var recalcCalled = false;
-
         function recalcContainerPos() {
 
             var grid = $('.grid');
