@@ -43,7 +43,11 @@ module.exports = function (passport) {
 				}
 					
 				user.displayName = profile.displayName;
-				user.picUrl = profile.photos[0].value;
+				if(profile.photos) {
+					user.picUrl = profile.photos[0].value;
+				} else {
+					user.picUrl = 'public/img/github_32px.png';
+				}
 				user.isAdmin = adminIDs.indexOf(user.id)>=0;
 					
 				user.save(function (err) {
