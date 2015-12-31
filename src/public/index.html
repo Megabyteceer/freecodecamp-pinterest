@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html ng-app="megabyte.funny-pets">
+
+	<head>
+		<title>Funny-pets</title>
+		<link href='https://fonts.googleapis.com/css?family=Overlock:700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
+		<link href="/public/css/loader.css" rel="stylesheet" type="text/css">
+		<link rel="SHORTCUT ICON" href="favicon.ico" type="image/x-icon">
+		<link rel="icon" type="image/ico" href="favicon.ico">
+	</head>
+	
+	<body>
+	
+	<div id="body">
+		<div id="bg-cat"></div>
+		<div class="container-fluid header flext-center-center" ng-controller="UserController as user" ng-cloak>
+			<div ng-show="user.data.id" class="text-center">
+				<img class="user-pic" ng-src="{{user.data.picUrl}}">
+				Welcome, {{user.data.displayName}}!
+				<a href="/profile">Profile</a> | 
+				<a href="/logout">Logout</a>
+			</div>
+			
+			
+			 <span ng-show="loggedIn" role="presentation">&nbsp;|&nbsp;
+			    	<a href="#your" aria-controls="your" role="tab" data-toggle="tab" ng-click="user.showMyPets()">
+			    		<span class="glyphicon glyphicon-book"></span> Your Funny Pets <span class="badge" ng-show="controller.approvNeedCount>0">{{controller.approvNeedCount}}</span>
+			    	</a>
+			 </span>
+			 
+			
+			
+			<div ng-show="!user.data.id" class="text-center">
+				please, 
+				<a id="loginlink" ng-href="{{user.loginLink}}">Login</a>
+				to say about your funny pets.
+			</div>
+		</div>
+		
+		<app-title></app-title>
+		
+		<div class="container-fluid" ng-controller="PetsController as controller" ng-cloak>
+			
+			<button class="btn btn-success btn-lg centralize" ng-click="controller.addNewClicked();"><span class="glyphicon glyphicon-plus"></span> add new one</button>
+			<div ng-show="controller.filterUser" class="centralize filter-title">
+				<hr class="bg-hr">
+				
+				<span ng-show="controller.filterUser.id !== controller.user.data.id">pets of {{controller.filterUser.displayName}}</span>
+				<span ng-show="controller.filterUser.id === controller.user.data.id">your pets</span>
+				
+				: 
+				
+				<button class="btn btn-default" ng-click="controller.filterByUser();"><span class="glyphicon glyphicon-arrow-left"></span> back to all</button>
+			</div>
+			
+			
+			<br>
+			    	<div class="books-tab grid centralize">
+			    		
+
+						
+						<div class="grid-item" ng-repeat="pet in controller.pets">
+							 <img class="pet-pic" fallback-src="public/img/broken.png" ng-src="{{pet.imgUrl}}">
+							 <div class="pet-container">
+								 <button class="btn btn-success btn-xs" ng-click="controller.likePet(pet)"><span class="glyphicon glyphicon-heart"></span> {{pet.likes}}</button>
+								 {{pet.title}}
+								 <hr>
+								  by: <a href="#" ng-click="controller.filterByUser(pet.userId)"><img class="author-pic" ng-src="{{pet.userId.picUrl}}"> {{pet.userId.displayName}}</a>
+							 </div>
+							 <div class="top-right" ng-show="controller.isAdmin(pet)">
+							 	<button class="btn btn-danger btn-xs" confirmation-needed="Wanted to remove this pet?<br><b>{{pet.title}}</b>" ng-click="controller.deletePet(pet)"><span class="glyphicon glyphicon-trash"></span></button>
+							 </div>
+							 
+						</div>
+						
+						
+			    	</div>
+	<!-- New pet -->
+	<div class="modal fade" id="new-pet-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title" id="myModalLabel">New pet</h4>
+	      </div>
+	      <div class="modal-body">
+	        
+	        <img id="new-preview-pic" class="preview-pic" fallback-src="public/img/broken.png" ng-src="{{controller.newPictureUrl}}"><br>
+	        <div class="form-group">
+			    <label for="exampleInputEmail1">picture url</label>
+			    <input id="new-pic-url" type="text" class="form-control" ng-model="controller.newPictureUrl" placeholder="https://example.com/my_pic.jpg">
+			    <div id="wrong-picture-url" class="text-danger text-xs"><b>wrong picture url!</b></div>
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputPassword1">title</label>
+			    <input id="new-title" type="text" class="form-control"  ng-model="controller.newTitle"  placeholder="title for you picture">
+			    <div id="wrong-title" class="text-danger text-xs"><b>empty title!</b></div>
+			</div>
+	        
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	        <button type="button" class="btn btn-success" ng-click="controller.submitNew()">Submit</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+			
+		</div>
+	</div>
+	
+	<div class="footer flext-center-center">
+		<a href="http://codepen.io/Megabyteceer/full/xwzMej/">Vasiliy Kostin</a>, fullstack, nodejs, angular, <a href="http://masonry.desandro.com/">Masonry.js</a>
+	</div>
+		
+	<!--loader-->
+	<div class="loader-frame">
+	  <div class="loader-subframe">
+		<div class="loader loader-l"></div>
+		<div class="loader"></div>
+		<div class="loader loader-r"></div> Loading...
+	  </div>
+	</div>
+			
+	<!-- confirmation dialogue-->		
+	<div id='confirmation-modal' class="modal fade" tabindex="-1" role="dialog">
+	  <div class="modal-dialog">
+	    <div class="alert alert-danger">
+	      <div class="row"><div class="col-xs-12">
+	      	<h4 id="modal-confirm-title" class="text-center">A you sure?</h4>
+	      	<hr>
+	      </div></div>
+	      <div class="row"><div class="col-xs-12">
+	      	<div id="modal-confirm-text" class="text-center"></div>
+	      </div></div>
+	      <div class="row"><div class="col-xs-12">
+	      	<hr>
+	      	<div class="pull-right">
+		      <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+		      <button id="modal-confirm-btn" type="button" class="btn btn-danger">Yes</button>
+		    </div>
+	      </div></div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+
+
+	
+	
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script src="controllers/app.js"></script>
+		<script type="text/javascript" src="controllers/petsController.client.js"></script>
+
+		<script type="text/javascript" src="controllers/userController.client.js"></script>
+		
+		<script src="/public/js/masonry.min.js"></script>
+		
+		
+		
+		
+	</body>
+
+</html>
