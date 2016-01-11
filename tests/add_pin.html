@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://freecodecamp-pinterest.herokuapp.com/" />
+<title>Add pin</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Add pin</td></tr>
+</thead><tbody>
+<tr>
+	<td>click</td>
+	<td>//div[@id='body']/div[3]/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=new-pic-url</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=new-pic-url</td>
+	<td>https://freecodecamp-pinterest.herokuapp.com/public/img/fp-logo.png</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=new-title</td>
+	<td>selenium test pin</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=div.modal-footer &gt; button.btn.btn-success</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//img[contains(@src,'https://freecodecamp-pinterest.herokuapp.com/public/img/fp-logo.png')]</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

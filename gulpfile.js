@@ -69,12 +69,12 @@ var reload = _browserSync2.default.reload;
 
 // Lint JavaScript
 _gulp2.default.task('lint', function () {
-  return _gulp2.default.src('src/app/controllers/**/*.js').pipe($.eslint()).pipe($.eslint.format()).pipe($.if(!_browserSync2.default.active, $.eslint.failOnError()));
+  return _gulp2.default.src('src/app/controllers/*.js').pipe($.eslint()).pipe($.eslint.format()).pipe($.if(!_browserSync2.default.active, $.eslint.failOnError()));
 });
 
 // Optimize images
 _gulp2.default.task('images', function () {
-  return _gulp2.default.src('app/images/**/*').pipe($.cache($.imagemin({
+  return _gulp2.default.src('src/public/img/*').pipe($.cache($.imagemin({
     progressive: true,
     interlaced: true
   }))).pipe(_gulp2.default.dest('dist/images')).pipe($.size({ title: 'images' }));
